@@ -1,6 +1,6 @@
 {
   "name": "bigtime-sdk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "BigTime SDK",
   "main": "index.js",
   "scripts": {
@@ -12,5 +12,12 @@
     "isomorphic-fetch": "^2.2.1",
     "path-to-regexp": "^1.5.3",
     "qs": "^6.2.1"
+  },
+  "bugs": {
+    "url": "https://github.com/john-goldsmith/bigtime-sdk/issues"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/john-goldsmith/bigtime-sdk.git"
   }
 }
