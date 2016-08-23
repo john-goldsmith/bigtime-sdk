@@ -1,0 +1,16 @@
+{
+  "name": "bigtime-sdk",
+  "version": "0.1.2",
+  "description": "BigTime SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "John Goldsmith <johngoldsm1@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "path-to-regexp": "^1.5.3",
+    "qs": "^6.2.1"
+  }
+}
