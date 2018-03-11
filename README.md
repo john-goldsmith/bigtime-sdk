@@ -49,7 +49,7 @@ bigTime.createSession()
 
 ## To Do
 - Normalize `HttpRequest[method]` signatures
-- Use `async/await`
+- Use `async`/`await`
 - Namespace resources (`bigTime.picklists.staff()`, etc.)
 - Add more endpoints:
   - Timers

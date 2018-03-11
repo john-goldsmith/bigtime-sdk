@@ -15,10 +15,10 @@ class Base {
     if (!options.username) throw new Error('Missing username configuration value.')
     if (!options.password) throw new Error('Missing password configuration value.')
 
-      /**
-       * [username description]
-       * @type {String}
-       */
+    /**
+     * [username description]
+     * @type {String}
+     */
     this.username = options.username
 
     /**
