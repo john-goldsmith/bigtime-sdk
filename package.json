@@ -1,21 +1,43 @@
 {
-  "name": "bigtime-sdk",
-  "version": "0.5.0",
-  "description": "BigTime SDK",
-  "main": "index.js",
-  "scripts": {},
   "author": "John Goldsmith <johngoldsm1@gmail.com>",
-  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/john-goldsmith/bigtime-sdk/issues"
+  },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "path-to-regexp": "^1.5.3",
     "qs": "^6.2.1"
   },
-  "bugs": {
-    "url": "https://github.com/john-goldsmith/bigtime-sdk/issues"
+  "description": "Node wrapper for interacting with the BigTime API",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.0",
+    "docdash": "^0.4.0",
+    "eslint": "^4.18.2",
+    "husky": "^0.14.3",
+    "jsdoc": "^3.5.5",
+    "mocha": "^5.0.2",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^11.4.1",
+    "sinon": "^4.4.2",
+    "sinon-chai": "^3.0.0"
   },
+  "engines": {
+    "node": "9.6.x",
+    "npm": "5.6.x"
+  },
+  "license": "ISC",
+  "main": "./index.js",
+  "name": "bigtime-sdk",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/john-goldsmith/bigtime-sdk.git"
-  }
+    "type": "git",
+    "url": "https://github.com/john-goldsmith/bigtime-sdk.git"
+  },
+  "scripts": {
+    "docs": "$(npm bin)/jsdoc ./src -r -d ./docs -t ./node_modules/docdash",
+    "lint": "$(npm bin)/eslint ./src/**/*.js ./test/**/*.js",
+    "precommit": "npm run lint && npm test",
+    "test": "$(npm bin)/nyc mocha --recursive --require ./test/helper.js && $(npm bin)/nyc report --reporter=html"
+  },
+  "version": "0.5.0"
 }

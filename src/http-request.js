@@ -1,19 +1,19 @@
-const fetch = require('isomorphic-fetch'),
-      /**
-       * The following is available from the `isomorphic-fetch` package,
-       * which is just a reference to the class exposed by the `node-fetch`
-       * package.
-       *
-       * @see github.com/matthew-andrews/isomorphic-fetch/blob/master/fetch-npm-node.js
-       */
-      Request = global.Request,
-      baseUrl = 'https://iq.bigtime.net/BigtimeData/api/v2',
-      defaultHeaders = {
-        'Content-Type': 'application/json'
-      };
+const fetch = require('isomorphic-fetch')
+/**
+ * The following is available from the `isomorphic-fetch` package,
+ * which is just a reference to the class exposed by the `node-fetch`
+ * package.
+ *
+ * @see github.com/matthew-andrews/isomorphic-fetch/blob/master/fetch-npm-node.js
+ */
+const Request = global.Request
+// const baseUrl = 'https://iq.bigtime.net/BigtimeData/api/v2'
+const defaultHeaders = {
+  'Content-Type': 'application/json'
+}
 
 /**
- *
+ * @class
  */
 class HttpRequest {
 
@@ -26,9 +26,9 @@ class HttpRequest {
    * @param  {Object} headers
    * @return {Promise}
    */
-  static get (url, headers = {}) {
-    if (!url) throw new Error('Base#get: a URL is required.');
-    return request(url, 'GET', null, headers);
+  static get(url, headers = {}) {
+    if (!url) throw new Error('Base.get: a URL is required.')
+    return request(url, 'GET', null, headers)
   }
 
   /**
@@ -41,9 +41,9 @@ class HttpRequest {
    * @param  {Object} headers
    * @return {Promise}
    */
-  static post (url, body = {}, headers = {}) {
-    if (!url) throw new Error('Base#post: a URL is required.');
-    return request(url, 'POST', body, headers);
+  static post(url, body = {}, headers = {}) {
+    if (!url) throw new Error('Base.post: a URL is required.')
+    return request(url, 'POST', body, headers)
   }
 
   /**
@@ -56,9 +56,9 @@ class HttpRequest {
    * @param  {Object} headers
    * @return {Promise}
    */
-  static put (url, body = {}, headers = {}) {
-    if (!url) throw new Error('Base#put: a URL is required.');
-    return request(url, 'PUT', body, headers);
+  static put(url, body = {}, headers = {}) {
+    if (!url) throw new Error('Base.put: a URL is required.')
+    return request(url, 'PUT', body, headers)
   }
 
   /**
@@ -71,9 +71,9 @@ class HttpRequest {
    * @param  {Object} headers
    * @return {Promise}
    */
-  static delete (url, body = {}, headers = {}) {
-    if (!url) throw new Error('Base#delete: a URL is required.');
-    return request(url, 'DELETE', body, headers);
+  static delete(url, body = {}, headers = {}) {
+    if (!url) throw new Error('Base.delete: a URL is required.')
+    return request(url, 'DELETE', body, headers)
   }
 
 }
@@ -89,15 +89,15 @@ class HttpRequest {
  * @param  {Object} headers
  * @return {Promise<Response>}
  */
-function request (url, method, body, headers) {
+function request(url, method, body, headers) {
   const request = new Request(url, {
     method,
     body: JSON.stringify(body),
     headers: Object.assign({}, headers, defaultHeaders)
-  });
+  })
   return fetch(request)
     .then(responseBodyAsJson)
-    .then(checkResponseStatus);
+    .then(checkResponseStatus)
 }
 
 /**
@@ -108,8 +108,8 @@ function request (url, method, body, headers) {
  * @param  {Response} response
  * @return {Promise}
  */
-function checkResponseStatus (response) {
-  return (response.status > 199 && response.status < 400) ? Promise.resolve(response) : Promise.reject(response);
+function checkResponseStatus(response) {
+  return (response.status > 199 && response.status < 400) ? Promise.resolve(response) : Promise.reject(response)
 }
 
 /**
@@ -120,14 +120,14 @@ function checkResponseStatus (response) {
  * @param  {Response} response
  * @return {Promise<Response>}
  */
-function responseBodyAsJson (response) {
+function responseBodyAsJson(response) {
   return response.json()
     .then(
       body => {
-        response.body = body; // TODO: Is this bad?
-        return response;
+        response.body = body // TODO: Is this bad?
+        return response
       }
-    );
+    )
 }
 
-module.exports = HttpRequest;
+module.exports = HttpRequest
