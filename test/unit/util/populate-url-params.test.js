@@ -15,10 +15,10 @@ describe('populateUrlParams()', () => {
 
     context('when no `params` are provided', () => {
 
-      it('throw an error', () => {
+      it('throws an error', () => {
         const url = 'https://google.com/:foo/bar/:baz'
         const actual = () => populateUrlParams(url)
-        expect(actual).to.throw('Expected "foo" to be defined')
+        expect(actual).to.throw('Expected "foo" to be a string')
       })
 
     })
