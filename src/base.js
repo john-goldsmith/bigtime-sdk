@@ -11,7 +11,7 @@ class Base {
    * @param  {Object} options
    * @return {Base}
    */
-  constructor (options = {}) {
+  constructor(options = {}) {
     if (!options.username) throw new Error('Missing username configuration value.')
     if (!options.password) throw new Error('Missing password configuration value.')
 
@@ -37,7 +37,7 @@ class Base {
    * @return {Object}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Session
    */
-  get authHeaders () {
+  get authHeaders() {
     if (!this.sessionToken) throw new Error('Session token not present.')
     if (!this.firm) throw new Error('Firm ID not present.')
     return {
@@ -55,7 +55,7 @@ class Base {
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Session
    */
-  createSession (queryParams = {}) {
+  createSession(queryParams = {}) {
     const { method, url } = Endpoint.createSession(queryParams)
     const body = {
       UserId: this.username,
@@ -76,8 +76,8 @@ class Base {
           delete this.password
           return response
         },
-        error => {
-          throw new Error('Error creating session.', error)
+        () => {
+          throw new Error('Error creating session.')
         }
       )
   }
@@ -92,7 +92,7 @@ class Base {
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Staff
    */
-  getStaffList (queryParams = {}) {
+  getStaffList(queryParams = {}) {
     const { method, url } = Endpoint.getStaffList(queryParams)
     return HttpRequest[method](url, this.authHeaders)
   }
@@ -108,8 +108,8 @@ class Base {
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Staff
    */
-  getStaffDetail (queryParams = {}, staffId = this.staffSid) {
-    const { method, url } = Endpoint.getStaffDetail(queryParams, staffId)
+  getStaffDetail(queryParams = {}, staffId = this.staffSid) {
+    const { method, url } = Endpoint.getStaffDetail(staffId, queryParams)
     return HttpRequest[method](url, this.authHeaders)
   }
 
@@ -124,8 +124,8 @@ class Base {
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Time
    */
-  getTimeSheetDateRange (queryParams = {}, staffId = this.staffSid) {
-    const { method, url } = Endpoint.getTimeSheetDateRange(queryParams, staffId)
+  getTimeSheetDateRange(queryParams = {}, staffId = this.staffSid) {
+    const { method, url } = Endpoint.getTimeSheetDateRange(staffId, queryParams)
     return HttpRequest[method](url, this.authHeaders)
   }
 
@@ -140,7 +140,7 @@ class Base {
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Time
    */
-  getDailyTotalDateRange (queryParams = {}, staffId = this.staffSid) {
+  getDailyTotalDateRange(queryParams = {}, staffId = this.staffSid) {
     const { method, url } = Endpoint.getDailyTotalDateRange(staffId, queryParams)
     return HttpRequest[method](url, this.authHeaders)
   }
@@ -156,7 +156,8 @@ class Base {
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Time
    */
-  getTimeEntry (id, queryParams = {}) {
+  getTimeEntry(id, queryParams = {}) {
+    if (!id) throw new Error('Missing id.')
     const { method, url } = Endpoint.getTimeEntry(id, queryParams)
     return HttpRequest[method](url, this.authHeaders)
   }
@@ -172,7 +173,7 @@ class Base {
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Time
    */
-  createTimeEntry (body = {}, queryParams = {}) {
+  createTimeEntry(body = {}, queryParams = {}) {
     if (!body.Dt) throw new Error('Missing date (`Dt` body param).')
     if (!body.ProjectSID) throw new Error('Missing project system ID (`ProjectSID` body param).')
     if (!body.BudgCatID) throw new Error('Missing budget category ID (`BudgCatID` body param).')
@@ -217,8 +218,10 @@ class Base {
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Time
    */
-  updateTimeEntry (id, body = {}, queryParams = {}) {
-    if (body.Dt && !body.Dt.match(dateRegExp)) throw new Error('Date must be in YYYY-MM-DD format.')
+  updateTimeEntry(id, body = {}, queryParams = {}) {
+    if (!id) throw new Error('Missing id.')
+    if (!body.Dt) throw new Error('Missing date (`Dt` body param)')
+    if (!body.Dt.match(dateRegExp)) throw new Error('Date must be in YYYY-MM-DD format.')
     const { method, url } = Endpoint.updateTimeEntry(id, queryParams)
     const defaultBody = {
       // SID: body.sid, // required
@@ -259,7 +262,8 @@ class Base {
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Time
    */
-  deleteTimeEntry (id, body = {}, queryParams = {}) {
+  deleteTimeEntry(id, body = {}, queryParams = {}) {
+    if (!id) throw new Error('Missing id.')
     const { method, url } = Endpoint.deleteTimeEntry(id, queryParams)
     return HttpRequest[method](url, body, this.authHeaders)
   }
@@ -275,7 +279,7 @@ class Base {
    * @param  {Object} queryParams
    * @return {Promise<Response>}
    */
-  findStaffByName (options = {}, queryParams = {}) {
+  findStaffByName(options = {}, queryParams = {}) {
     // TODO: What about...
     // const optionToQueryParam = {
     //   firstName: 'FName',
@@ -313,7 +317,7 @@ class Base {
    * @param {Object} queryParams
    * @return {Promise}
    */
-  getReportById (id, queryParams = {}) {
+  getReportById(id, queryParams = {}) {
     if (!id) throw new Error('Missing id.')
     const { method, url } = Endpoint.getReportById(id, queryParams)
     return HttpRequest[method](url, this.authHeaders)
@@ -327,7 +331,7 @@ class Base {
    * @param  {Object} queryParams
    * @return {Promise}
    */
-  updateReportById (id, body = {}, queryParams = {}) {
+  updateReportById(id, body = {}, queryParams = {}) {
     if (!id) throw new Error('Missing id.')
     if (!body.DT_BEGIN) throw new Error('Missing start date (`DT_BEGIN body param`)')
     if (!body.DT_END) throw new Error('Missing end date (`DT_END body param`)')
@@ -343,7 +347,7 @@ class Base {
    * @param  {Object} queryParams
    * @return {Promise<Array>}
    */
-  projectsPicklist (queryParams = {}) {
+  projectsPicklist(queryParams = {}) {
     const { method, url } = Endpoint.projectsPicklist(queryParams)
     return HttpRequest[method](url, this.authHeaders)
   }
@@ -354,7 +358,7 @@ class Base {
    * @param  {Object} queryParams
    * @return {Promise<Array>}
    */
-  staffPicklist (queryParams = {}) {
+  staffPicklist(queryParams = {}) {
     const { method, url } = Endpoint.staffPicklist(queryParams)
     return HttpRequest[method](url, this.authHeaders)
   }

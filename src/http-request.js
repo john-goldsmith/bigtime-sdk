@@ -7,6 +7,7 @@ const fetch = require('isomorphic-fetch')
  * @see github.com/matthew-andrews/isomorphic-fetch/blob/master/fetch-npm-node.js
  */
 const Request = global.Request
+// const Headers = global.Headers
 // const baseUrl = 'https://iq.bigtime.net/BigtimeData/api/v2'
 const defaultHeaders = {
   'Content-Type': 'application/json'
@@ -94,6 +95,7 @@ function request(url, method, body, headers) {
     method,
     body: JSON.stringify(body),
     headers: Object.assign({}, headers, defaultHeaders)
+    // headers: new Headers({})
   })
   return fetch(request)
     .then(responseBodyAsJson)

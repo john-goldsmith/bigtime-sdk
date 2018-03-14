@@ -1,33 +1,7 @@
-const pathToRegExp = require('path-to-regexp')
 const qs = require('qs')
 const apiBase = 'https://iq.bigtime.net/BigtimeData/api/v2'
 const dateRegExp = /^\d{4}-\d{2}-\d{2}$/
-
-/**
- * [populateUrlParams description]
- *
- * @private
- * @param  {String} url
- * @param  {Object} params
- * @return {String}
- */
-function populateUrlParams(url = '', params = {}) {
-  return pathToRegExp.compile(url)(params)
-}
-
-/**
- * [getCurrentDate description]
- *
- * @private
- * @return {String} Returns a properly formatted date (YYYY-MM-DD).
- */
-function getCurrentDate() {
-  const date = new Date()
-  const year = date.getFullYear()
-  const month = `0${(date.getMonth() + 1)}`.slice(-2)
-  const day = `0${(date.getDate())}`.slice(-2)
-  return `${year}-${month}-${day}`
-}
+const util = require('./util')
 
 /**
  * @class
@@ -75,11 +49,12 @@ class Endpoint {
    * @return {Object}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Staff
    */
-  static getStaffDetail(queryParams, staffId) {
+  static getStaffDetail(staffId, queryParams = {}) {
+    if (!staffId) throw new Error('No staff ID provided')
     const method = 'get'
     const endpoint = '/staff/detail/:staffId'
     const defaultQueryParams = {View: 'Detailed'}
-    const urlParams = populateUrlParams(endpoint, {staffId})
+    const urlParams = util.populateUrlParams(endpoint, {staffId})
     const mergedQueryParams = Object.assign({}, queryParams, defaultQueryParams)
     const url = `${apiBase}${urlParams}?${qs.stringify(mergedQueryParams)}`
     return { method, url }
@@ -93,16 +68,17 @@ class Endpoint {
    * @param  {Number} staffId
    * @return {Object}
    */
-  static getTimeSheetDateRange(queryParams = {}, staffId) {
+  static getTimeSheetDateRange(staffId, queryParams = {}) {
+    if (!staffId) throw new Error('No staff ID provided')
     if (!queryParams.StartDt) throw new Error('No start date provided (query param `StartDt`).')
     if (!queryParams.StartDt.match(dateRegExp)) throw new Error('Start date must be in YYYY-MM-DD format.')
     const method = 'get'
     const endpoint = '/time/Sheet/:staffId'
     const defaultQueryParams = {
-      EndDt: getCurrentDate(),
+      EndDt: util.getCurrentDate(),
       View: 'Detailed'
     }
-    const urlParams = populateUrlParams(endpoint, {staffId})
+    const urlParams = util.populateUrlParams(endpoint, {staffId})
     const mergedQueryParams = Object.assign({}, queryParams, defaultQueryParams)
     const url = `${apiBase}${urlParams}?${qs.stringify(mergedQueryParams)}`
     return { method, url }
@@ -117,15 +93,16 @@ class Endpoint {
    * @return {Object} [description]
    */
   static getDailyTotalDateRange(staffId, queryParams = {}) {
+    if (!staffId) throw new Error('No staff ID provided')
     if (!queryParams.StartDt) throw new Error('No start date provided (query param `StartDt`).')
     if (!queryParams.StartDt.match(dateRegExp)) throw new Error('Start date must be in YYYY-MM-DD format.')
     const method = 'get'
     const endpoint = '/time/TotalByDay/:staffId'
     const defaultQueryParams = {
-      EndDt: getCurrentDate(),
+      EndDt: util.getCurrentDate(),
       View: 'Detailed'
     }
-    const urlParams = populateUrlParams(endpoint, {staffId})
+    const urlParams = util.populateUrlParams(endpoint, {staffId})
     const mergedQueryParams = Object.assign({}, queryParams, defaultQueryParams)
     const url = `${apiBase}${urlParams}?${qs.stringify(mergedQueryParams)}`
     return { method, url }
@@ -140,9 +117,10 @@ class Endpoint {
    * @return {Object}
    */
   static getTimeEntry(id, queryParams = {}) {
+    if (!id) throw new Error('Missing id.')
     const method = 'get'
     const endpoint = '/time/:id'
-    const urlParams = populateUrlParams(endpoint, {id})
+    const urlParams = util.populateUrlParams(endpoint, {id})
     const url = `${apiBase}${urlParams}?${qs.stringify(queryParams)}`
     return { method, url }
   }
@@ -174,9 +152,10 @@ class Endpoint {
    * @return {Object}
    */
   static updateTimeEntry(id, queryParams = {}) {
+    if (!id) throw new Error('Missing id.')
     const method = 'post'
     const endpoint = '/time/:id'
-    const urlParams = populateUrlParams(endpoint, {id})
+    const urlParams = util.populateUrlParams(endpoint, {id})
     const defaultQueryParams = {
       MarkSubmitted: false
     }
@@ -194,9 +173,10 @@ class Endpoint {
    * @return {Object}
    */
   static deleteTimeEntry(id, queryParams = {}) {
+    if (!id) throw new Error('Missing id.')
     const method = 'delete'
     const endpoint = '/time/:id'
-    const urlParams = populateUrlParams(endpoint, {id})
+    const urlParams = util.populateUrlParams(endpoint, {id})
     const url = `${apiBase}${urlParams}?${qs.stringify(queryParams)}`
     return { method, url }
   }
@@ -210,9 +190,10 @@ class Endpoint {
    * @return {Object}
    */
   static getReportById(id, queryParams = {}) {
+    if (!id) throw new Error('Missing id.')
     const method = 'get'
     const endpoint = '/report/data/:id'
-    const urlParams = populateUrlParams(endpoint, {id})
+    const urlParams = util.populateUrlParams(endpoint, {id})
     const url = `${apiBase}${urlParams}?${qs.stringify(queryParams)}`
     return { method, url }
   }
@@ -226,9 +207,10 @@ class Endpoint {
    * @return {Object}
    */
   static updateReportById(id, queryParams = {}) {
+    if (!id) throw new Error('Missing id.')
     const method = 'post'
     const endpoint = '/report/data/:id'
-    const urlParams = populateUrlParams(endpoint, {id})
+    const urlParams = util.populateUrlParams(endpoint, {id})
     const url = `${apiBase}${urlParams}?${qs.stringify(queryParams)}`
     return { method, url }
   }

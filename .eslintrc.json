@@ -3,15 +3,23 @@
     "es6": true,
     "node": true
   },
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
   "extends": "eslint:recommended",
   "globals": {
     "afterEach": false,
     "beforeEach": false,
+    "before": false,
+    "after": false,
     "context": false,
     "describe": false,
     "expect": false,
     "it": false,
-    "sinon": false
+    "sinon": false,
+    "Request": false,
+    "Response": false,
+    "Headers": false
   },
   "rules": {
     "indent": [
@@ -29,6 +37,10 @@
     "semi": [
       "error",
       "never"
-    ]
+    ],
+    "space-before-function-paren": ["error", {
+      "named": "never",
+      "asyncArrow": "always"
+    }]
   }
 }
