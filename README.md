@@ -5,7 +5,7 @@ Node wrapper for interacting with the [BigTime API](http://iq.bigtime.net/Bigtim
 [![npm version](https://badge.fury.io/js/bigtime-sdk.svg)](https://badge.fury.io/js/bigtime-sdk)
 [![Code Climate Maintainability](https://api.codeclimate.com/v1/badges/373d61ec523888da1663/maintainability)](https://codeclimate.com/github/john-goldsmith/bigtime-sdk/maintainability)
 [![Code Climate Test Coverage](https://api.codeclimate.com/v1/badges/373d61ec523888da1663/test_coverage)](https://codeclimate.com/github/john-goldsmith/bigtime-sdk/test_coverage)
-[![Coveralls Coverage Status](https://coveralls.io/repos/github/john-goldsmith/bigtime-sdk/badge.svg)](https://coveralls.io/github/john-goldsmith/bigtime-sdk)
+[![Coveralls Coverage Status](https://coveralls.io/repos/github/john-goldsmith/bigtime-sdk/badge.svg?branch=master)](https://coveralls.io/github/john-goldsmith/bigtime-sdk?branch=master)
 [![David DM](https://david-dm.org/john-goldsmith/bigtime-sdk.svg)](https://david-dm.org/john-goldsmith/bigtime-sdk)
 
 ## Installation
