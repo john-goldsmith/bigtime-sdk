@@ -37,7 +37,7 @@
   },
   "scripts": {
     "docs": "$(npm bin)/jsdoc ./src -r -d ./docs -t ./node_modules/docdash && echo 'Open ./docs/index.html in your browser'",
-    "lint": "$(npm bin)/eslint ./src/**/*.js ./test/**/*.js",
+    "lint": "$(npm bin)/eslint index.js ./src/**/*.js ./test/**/*.js",
     "precommit": "npm run lint && npm test",
     "test": "$(npm bin)/nyc mocha --recursive --require ./test/helper.js && $(npm bin)/nyc report --reporter=lcov",
     "test:coveralls": "cat ./coverage/lcov.info | $(npm bin)/coveralls"

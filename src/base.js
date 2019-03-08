@@ -353,6 +353,17 @@ class Base {
   }
 
   /**
+   * [laborCodesPicklist description]
+   *
+   * @param  {Object} queryParams
+   * @return {Promise<Array>}
+   */
+  laborCodesPicklist(queryParams = {}) {
+    const { method, url } = Endpoint.laborCodesPicklist(queryParams)
+    return HttpRequest[method](url, this.authHeaders)
+  }
+
+  /**
    * [staffPicklist description]
    *
    * @param  {Object} queryParams
