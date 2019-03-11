@@ -12,20 +12,23 @@ class Base {
    * @return {Base}
    */
   constructor(options = {}) {
-    if (!options.username) throw new Error('Missing username configuration value.')
-    if (!options.password) throw new Error('Missing password configuration value.')
-
     /**
-     * [username description]
-     * @type {String}
+     * [options description]
+     * @type {Object}
      */
-    this.username = options.username
+    this.options = options
+  }
 
-    /**
-     * [password description]
-     * @type {String}
-     */
-    this.password = options.password
+  /**
+   * [isLoggedIn description]
+   *
+   * @public
+   * @method isLoggedIn
+   * @memberOf Base
+   * @return {Boolean}
+   */
+  isLoggedIn() {
+    return !!this.sessionToken && !!this.firm && !!this.staffSid && !!this.userId
   }
 
   /**
@@ -52,14 +55,18 @@ class Base {
    * @public
    * @method createSession
    * @memberOf Base
+   * @param {String} username
+   * @param {String} password
    * @return {Promise<Response>}
    * @see http://iq.bigtime.net/BigtimeData/api/v2/help/Session
    */
-  createSession(queryParams = {}) {
+  createSession(username, password, queryParams = {}) {
+    if (!username) throw new Error('Missing username configuration value.')
+    if (!password) throw new Error('Missing password configuration value.')
     const { method, url } = Endpoint.createSession(queryParams)
     const body = {
-      UserId: this.username,
-      Pwd: this.password
+      UserId: username,
+      Pwd: password
     }
     return HttpRequest[method](url, body)
       .then(
@@ -68,12 +75,6 @@ class Base {
           this.firm = response.body.firm
           this.staffSid = response.body.staffsid
           this.userId = response.body.userid
-          /**
-           * Once a session has been established, the username and
-           * password are no longer needed.
-           */
-          delete this.username
-          delete this.password
           return response
         },
         () => {
@@ -195,8 +196,8 @@ class Base {
       // TaskNm: body.taskNumber,
       // QBClass: body.quickBooksClass,
       // PayrollItem: body.payrollItem,
-      Hours_IN: body.Hours_IN // required
-      // Notes: body.notes,
+      Hours_IN: body.Hours_IN, // required
+      Notes: body.notes || '',
       // AuditLogNote: body.auditLogNote,
       // NoCharge: body.noCharge,
       // HoursBillable: body.hoursBillable, // documentation claims this is required, but doesn't appear to be (or the API has a sensible default)
