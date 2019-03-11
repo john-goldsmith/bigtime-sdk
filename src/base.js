@@ -197,7 +197,7 @@ class Base {
       // QBClass: body.quickBooksClass,
       // PayrollItem: body.payrollItem,
       Hours_IN: body.Hours_IN, // required
-      Notes: body.notes || '',
+      Notes: body.Notes || ''
       // AuditLogNote: body.auditLogNote,
       // NoCharge: body.noCharge,
       // HoursBillable: body.hoursBillable, // documentation claims this is required, but doesn't appear to be (or the API has a sensible default)
