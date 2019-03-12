@@ -6,7 +6,7 @@ Node wrapper for interacting with the [BigTime API](http://iq.bigtime.net/Bigtim
 [![Code Climate Maintainability](https://api.codeclimate.com/v1/badges/373d61ec523888da1663/maintainability)](https://codeclimate.com/github/john-goldsmith/bigtime-sdk/maintainability)
 [![Code Climate Test Coverage](https://api.codeclimate.com/v1/badges/373d61ec523888da1663/test_coverage)](https://codeclimate.com/github/john-goldsmith/bigtime-sdk/test_coverage)
 [![Coveralls Coverage Status](https://coveralls.io/repos/github/john-goldsmith/bigtime-sdk/badge.svg?branch=master)](https://coveralls.io/github/john-goldsmith/bigtime-sdk?branch=master)
-[![David DM](https://david-dm.org/john-goldsmith/bigtime-sdk.svg)](https://david-dm.org/john-goldsmith/bigtime-sdk)
+[![David DM](https://david-dm.org/john-goldsmith/bigtime-sdk.svg)](https://david-dm.org/john-goldsmith/bigtime-sdk) [![Greenkeeper badge](https://badges.greenkeeper.io/john-goldsmith/bigtime-sdk.svg)](https://greenkeeper.io/)
 
 ## Installation
 
