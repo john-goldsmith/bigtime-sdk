@@ -42,5 +42,5 @@
     "test": "$(npm bin)/nyc mocha --recursive --require ./test/helper.js && $(npm bin)/nyc report --reporter=lcov && echo 'Open ./coverage/lcov-report/index.html in your browser'",
     "test:coveralls": "cat ./coverage/lcov.info | $(npm bin)/coveralls"
   },
-  "version": "0.10.0"
+  "version": "0.11.0"
 }
