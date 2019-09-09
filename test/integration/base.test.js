@@ -39,5 +39,6 @@ describe('Base', () => {
 
   describe('#staffPicklist', () => {})
 
+  describe('#clientsPicklist', () => {})
 
 })

@@ -255,6 +255,20 @@ class Endpoint {
     return { method, url }
   }
 
+  /**
+   * [clientsPicklist description]
+   *
+   * @param  {Object} queryParams
+   * @return {Object}
+   * @see http://iq.bigtime.net/BigTimeData/api/v2/help/Picklist
+   */
+  static clientsPicklist(queryParams = {}) {
+    const method = 'get'
+    const endpoint = '/picklist/clients'
+    const url = `${apiBase}${endpoint}?${qs.stringify(queryParams)}`
+    return { method, url }
+  }
+
 }
 
 module.exports = Endpoint

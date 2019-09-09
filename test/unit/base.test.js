@@ -1031,4 +1031,46 @@ describe('Base', () => {
 
   })
 
+  describe('#clientsPicklist()', () => {
+
+    let instance
+    let authHeadersStub
+    let endpointStub
+    let httpRequestStub
+    let authHeaders
+
+    before(() => {
+      authHeaders = {
+        'X-Auth-Token': 'abc-123',
+        'X-Auth-Realm': 'ACME Co.'
+      }
+      instance = new Base()
+      authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
+      endpointStub = sinon.stub(Endpoint, 'clientsPicklist').returns({method: 'get', url: '/clients-picklist'})
+      httpRequestStub = sinon.stub(HttpRequest, 'get').resolves()
+    })
+
+    after(() => {
+      endpointStub.restore()
+      httpRequestStub.restore()
+      authHeadersStub.restore()
+    })
+
+    it('uses the corresponding endpoint', () => {
+      instance.clientsPicklist()
+      expect(endpointStub).to.have.been.calledWith({})
+    })
+
+    it('makes an HTTP request', () => {
+      instance.clientsPicklist()
+      expect(httpRequestStub).to.have.been.calledWith('/clients-picklist', authHeaders)
+    })
+
+    it('returns a Promise', () => {
+      const actual = instance.clientsPicklist()
+      expect(actual).to.be.an.instanceOf(Promise)
+    })
+
+  })
+
 })

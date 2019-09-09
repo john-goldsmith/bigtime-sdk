@@ -375,6 +375,17 @@ class Base {
     return HttpRequest[method](url, this.authHeaders)
   }
 
+  /**
+   * [clientsPicklist description]
+   *
+   * @param  {Object} queryParams
+   * @return {Promise<Array>}
+   */
+  clientsPicklist(queryParams = {}) {
+    const { method, url } = Endpoint.clientsPicklist(queryParams)
+    return HttpRequest[method](url, this.authHeaders)
+  }
+
 }
 
 module.exports = Base
