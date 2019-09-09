@@ -125,8 +125,8 @@ function checkResponseStatus(response) {
 function responseBodyAsJson(response) {
   return response.json()
     .then(
-      body => {
-        response.body = body // TODO: Is this bad?
+      json => {
+        response.body = json // TODO: Is this bad?
         return response
       }
     )

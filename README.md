@@ -17,44 +17,39 @@ Node wrapper for interacting with the [BigTime API](http://iq.bigtime.net/Bigtim
 ```js
 const BigTime = require('bigtime-sdk');
 
-const bigTime = new BigTime({
-  username: YOUR_USERNAME_HERE,
-  password: YOUR_PASSWORD_HERE
-});
+const bigTime = new BigTime();
 
-bigTime.createSession()
-  .then(
-    response => {
-      // Do stuff with the response
-      return bigTime.getStaffList();
-    }
-  )
-  .then(
-    response => {
-      // Do stuff with the response
-    }
-  )
+(async () => {
+  try {
+    await bigTime.createSession(YOUR_USERNAME, YOUR_PASSWORD);
+    const staffListResponse = await bigTime.getStaffList();
+    // etc.
+  } catch (err) {
+    console.log(err.name, err.message);
+  }
+})()
 ```
-
 
 ## Tests
 
 `npm test`
 
 ```
--------------------------|----------|----------|----------|----------|----------------|
-File                     |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
--------------------------|----------|----------|----------|----------|----------------|
-All files                |      100 |      100 |      100 |      100 |                |
- src                     |      100 |      100 |      100 |      100 |                |
-  base.js                |      100 |      100 |      100 |      100 |                |
-  endpoint.js            |      100 |      100 |      100 |      100 |                |
-  http-request.js        |      100 |      100 |      100 |      100 |                |
- src/util                |      100 |      100 |      100 |      100 |                |
-  get-current-date.js    |      100 |      100 |      100 |      100 |                |
-  index.js               |      100 |      100 |      100 |      100 |                |
-  populate-url-params.js |      100 |      100 |      100 |      100 |                |
--------------------------|----------|----------|----------|----------|----------------|
+199 passing
+
+-------------------------|----------|----------|----------|----------|-------------------|
+File                     |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+-------------------------|----------|----------|----------|----------|-------------------|
+All files                |      100 |      100 |      100 |      100 |                   |
+ src                     |      100 |      100 |      100 |      100 |                   |
+  base.js                |      100 |      100 |      100 |      100 |                   |
+  endpoint.js            |      100 |      100 |      100 |      100 |                   |
+  http-request.js        |      100 |      100 |      100 |      100 |                   |
+ src/util                |      100 |      100 |      100 |      100 |                   |
+  get-current-date.js    |      100 |      100 |      100 |      100 |                   |
+  index.js               |      100 |      100 |      100 |      100 |                   |
+  populate-url-params.js |      100 |      100 |      100 |      100 |                   |
+-------------------------|----------|----------|----------|----------|-------------------|
 ```
 
 ## Documentation

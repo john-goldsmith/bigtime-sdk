@@ -241,6 +241,20 @@ class Endpoint {
     return { method, url }
   }
 
+  /**
+   * [laborCodesPicklist description]
+   *
+   * @param  {Object} queryParams
+   * @return {Object}
+   * @see http://iq.bigtime.net/BigTimeData/api/v2/help/Picklist
+   */
+  static laborCodesPicklist(queryParams = {}) {
+    const method = 'get'
+    const endpoint = '/picklist/LaborCodes'
+    const url = `${apiBase}${endpoint}?${qs.stringify(queryParams)}`
+    return { method, url }
+  }
+
 }
 
 module.exports = Endpoint

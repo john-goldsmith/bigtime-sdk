@@ -8,33 +8,40 @@ describe('Base', () => {
 
     context('when no options are provided', () => {
 
-      it('throws an error', () => {
-        const actual = () => new Base()
-        expect(actual).to.throw(Error, 'Missing username configuration value.')
+      it('defaults options to an empty object', () => {
+        const actual = new Base()
+        const expected = {}
+        expect(actual.options).to.deep.eq(expected)
       })
 
     })
 
-    context('when a username is not provided', () => {
+  })
 
-      it('throws an error', () => {
-        const options = {
-          password: 'Abc123'
-        }
-        const actual = () => new Base(options)
-        expect(actual).to.throw(Error, 'Missing username configuration value.')
+  describe('#isLoggedIn', () => {
+
+    context('when logged in', () => {
+
+      it('returns true', () => {
+        const instance = new Base()
+        instance.sessionToken = 'foo'
+        instance.firm = 'bar'
+        instance.staffSid = 'baz'
+        instance.userId = 'blah'
+        const actual = instance.isLoggedIn()
+        const expected = true
+        expect(actual).to.eq(expected)
       })
 
     })
 
-    context('when a password is not provided', () => {
+    context('when not logged in', () => {
 
-      it('throws an error', () => {
-        const options = {
-          username: 'john'
-        }
-        const actual = () => new Base(options)
-        expect(actual).to.throw(Error, 'Missing password configuration value.')
+      it('returns false', () => {
+        const instance = new Base()
+        const actual = instance.isLoggedIn()
+        const expected = false
+        expect(actual).to.eq(expected)
       })
 
     })
@@ -46,11 +53,7 @@ describe('Base', () => {
     context('when no session token is present', () => {
 
       it('throws an error', () => {
-        const options = {
-          username: 'john',
-          password: 'Abc123'
-        }
-        const instance = new Base(options)
+        const instance = new Base()
         const actual = () => instance.authHeaders
         expect(actual).to.throw(Error, 'Session token not present.')
       })
@@ -60,11 +63,7 @@ describe('Base', () => {
     context('when no firm ID is present', () => {
 
       it('throws an error', () => {
-        const options = {
-          username: 'john',
-          password: 'Abc123'
-        }
-        const instance = new Base(options)
+        const instance = new Base()
         instance.sessionToken = 'xyz123'
         const actual = () => instance.authHeaders
         expect(actual).to.throw(Error, 'Firm ID not present.')
@@ -75,11 +74,7 @@ describe('Base', () => {
     context('when a session token and firm ID are provided', () => {
 
       it('returns an object', () => {
-        const options = {
-          username: 'john',
-          password: 'Abc123'
-        }
-        const instance = new Base(options)
+        const instance = new Base()
         instance.sessionToken = 'xyz123'
         instance.firm = 'ACME Co.'
         const actual = instance.authHeaders
@@ -96,108 +91,114 @@ describe('Base', () => {
 
   describe('#createSession()', () => {
 
-    context('when the request is successful', () => {
+    context('when not provided a username', () => {
 
-      let instance
-      let endpointStub
-      let httpRequestStub
-      let response
-
-      before(() => {
-        const options = {
-          username: 'john',
-          password: 'Abc123'
-        }
-        response = {
-          body: {
-            token: 'abc-123',
-            firm: 'ACME Co.',
-            staffsid: 123,
-            userid: 456
-          }
-        }
-        instance = new Base(options)
-        endpointStub = sinon.stub(Endpoint, 'createSession').returns({method: 'post', url: '/create-session'})
-        httpRequestStub = sinon.stub(HttpRequest, 'post').resolves(response)
-      })
-
-      after(() => {
-        endpointStub.restore()
-        httpRequestStub.restore()
-      })
-
-      it('returns a Promise', () => {
-        const actual = instance.createSession()
-        expect(actual).to.be.an.instanceOf(Promise)
-      })
-
-      it('uses the corresponding endpoint', () => {
-        instance.createSession()
-        expect(endpointStub).to.have.been.calledWith({})
-      })
-
-      it('makes an HTTP request', () => {
-        instance.createSession()
-        expect(httpRequestStub).to.have.been.calledWith('/create-session', {UserId: 'john', Pwd: 'Abc123'})
-      })
-
-      it('sets `sessionToken` instance variable', () => {
-        instance.createSession()
-        expect(instance.sessionToken).to.eq(response.body.token)
-      })
-
-      it('sets `firm` instance variable', () => {
-        instance.createSession()
-        expect(instance.firm).to.eq(response.body.firm)
-      })
-
-      it('sets `staffSid` instance variable', () => {
-        instance.createSession()
-        expect(instance.staffSid).to.eq(response.body.staffsid)
-      })
-
-      it('sets `userId` instance variable', () => {
-        instance.createSession()
-        expect(instance.userId).to.eq(response.body.userid)
-      })
-
-      it('deletes `username` instance variable', () => {
-        instance.createSession()
-        expect(instance.username).to.eq(undefined)
-      })
-
-      it('deletes `password` instance variable', () => {
-        instance.createSession()
-        expect(instance.password).to.eq(undefined)
+      it('throws an error', () => {
+        const instance = new Base()
+        const actual = () => instance.createSession(null, null, {})
+        expect(actual).to.throw(Error, 'Missing username configuration value.')
       })
 
     })
 
-    context('when the request is unsuccessful', () => {
+    context('when not provided a password', () => {
 
-      let instance
-      let endpointStub
-      let httpRequestStub
-
-      before(() => {
-        const options = {
-          username: 'john',
-          password: 'Abc123'
-        }
-        instance = new Base(options)
-        endpointStub = sinon.stub(Endpoint, 'createSession').returns({method: 'post', url: '/create-session'})
-        httpRequestStub = sinon.stub(HttpRequest, 'post').rejects()
+      it('throws an error', () => {
+        const instance = new Base()
+        const actual = () => instance.createSession('username', null, {})
+        expect(actual).to.throw(Error, 'Missing password configuration value.')
       })
 
-      after(() => {
-        endpointStub.restore()
-        httpRequestStub.restore()
+    })
+
+    context('when provided both a username and password', () => {
+
+      context('when the request is successful', () => {
+
+        let instance
+        let endpointStub
+        let httpRequestStub
+        let response
+
+        before(() => {
+          response = {
+            body: {
+              token: 'abc-123',
+              firm: 'ACME Co.',
+              staffsid: 123,
+              userid: 456
+            }
+          }
+          instance = new Base()
+          endpointStub = sinon.stub(Endpoint, 'createSession').returns({method: 'post', url: '/create-session'})
+          httpRequestStub = sinon.stub(HttpRequest, 'post').resolves(response)
+        })
+
+        after(() => {
+          endpointStub.restore()
+          httpRequestStub.restore()
+        })
+
+        it('returns a Promise', () => {
+          const actual = instance.createSession('username', 'password')
+          expect(actual).to.be.an.instanceOf(Promise)
+        })
+
+        it('uses the corresponding endpoint', () => {
+          instance.createSession('username', 'password')
+          expect(endpointStub).to.have.been.calledWith({})
+        })
+
+        it('makes an HTTP request', () => {
+          instance.createSession('john', 'Abc123')
+          expect(httpRequestStub).to.have.been.calledWith('/create-session', {UserId: 'john', Pwd: 'Abc123'})
+        })
+
+        it('sets `sessionToken` instance variable', () => {
+          instance.createSession('username', 'password')
+          expect(instance.sessionToken).to.eq(response.body.token)
+        })
+
+        it('sets `firm` instance variable', () => {
+          instance.createSession('username', 'password')
+          expect(instance.firm).to.eq(response.body.firm)
+        })
+
+        it('sets `staffSid` instance variable', () => {
+          instance.createSession('username', 'password')
+          expect(instance.staffSid).to.eq(response.body.staffsid)
+        })
+
+        it('sets `userId` instance variable', () => {
+          instance.createSession('username', 'password')
+          expect(instance.userId).to.eq(response.body.userid)
+        })
+
       })
 
-      it('returns a rejected Promise', () => {
-        const actual = instance.createSession()
-        expect(actual).to.be.rejectedWith('Error creating session.')
-        expect(actual).to.be.an.instanceOf(Promise)
+      context('when the request is unsuccessful', () => {
+
+        let instance
+        let endpointStub
+        let httpRequestStub
+
+        before(() => {
+          instance = new Base()
+          endpointStub = sinon.stub(Endpoint, 'createSession').returns({method: 'post', url: '/create-session'})
+          httpRequestStub = sinon.stub(HttpRequest, 'post').rejects()
+        })
+
+        after(() => {
+          endpointStub.restore()
+          httpRequestStub.restore()
+        })
+
+        it('returns a rejected Promise', () => {
+          const actual = instance.createSession('username', 'password')
+          expect(actual).to.be.rejectedWith('Error creating session.')
+          expect(actual).to.be.an.instanceOf(Promise)
+        })
+
       })
 
     })
@@ -213,15 +214,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'getStaffList').returns({method: 'get', url: '/get-staff-list'})
       httpRequestStub = sinon.stub(HttpRequest, 'get').resolves()
@@ -259,15 +256,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'getStaffDetail').returns({method: 'get', url: '/get-staff-detail'})
       httpRequestStub = sinon.stub(HttpRequest, 'get').resolves()
@@ -307,15 +300,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'getTimeSheetDateRange').returns({method: 'get', url: '/get-time-sheet-date-range'})
       httpRequestStub = sinon.stub(HttpRequest, 'get').resolves()
@@ -355,15 +344,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       instance.staffSid = 1
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'getDailyTotalDateRange').returns({method: 'get', url: '/get-daily-total-date-range'})
@@ -402,15 +387,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       instance.staffSid = 1
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'getTimeEntry').returns({method: 'get', url: '/get-time-entry'})
@@ -462,15 +443,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       instance.staffSid = 1
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'createTimeEntry').returns({method: 'post', url: '/create-time-entry'})
@@ -549,7 +526,8 @@ describe('Base', () => {
           ProjectSID: body.ProjectSID,
           StaffSID: 1,
           BudgCatID: body.BudgCatID,
-          Hours_IN: body.Hours_IN
+          Hours_IN: body.Hours_IN,
+          Notes: ''
         }
         expect(httpRequestStub).to.have.been.calledWith('/create-time-entry', mergedBody, authHeaders)
       })
@@ -572,15 +550,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'updateTimeEntry').returns({method: 'post', url: '/update-time-entry'})
       httpRequestStub = sinon.stub(HttpRequest, 'post').resolves()
@@ -653,15 +627,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       instance.staffSid = 1
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'deleteTimeEntry').returns({method: 'delete', url: '/delete-time-entry'})
@@ -711,10 +681,6 @@ describe('Base', () => {
     let getStaffListStub
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       response = {
         body: [
           {
@@ -724,7 +690,7 @@ describe('Base', () => {
           }
         ]
       }
-      instance = new Base(options)
+      instance = new Base()
       getStaffListStub = sinon.stub(instance, 'getStaffList').resolves(response)
     })
 
@@ -796,15 +762,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       instance.staffSid = 1
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'getReportById').returns({method: 'get', url: '/get-report-by-id'})
@@ -856,15 +818,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       instance.staffSid = 1
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'updateReportById').returns({method: 'post', url: '/update-report-by-id'})
@@ -956,15 +914,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'projectsPicklist').returns({method: 'get', url: '/projects-picklist'})
       httpRequestStub = sinon.stub(HttpRequest, 'get').resolves()
@@ -1002,15 +956,11 @@ describe('Base', () => {
     let authHeaders
 
     before(() => {
-      const options = {
-        username: 'john',
-        password: 'Abc123'
-      }
       authHeaders = {
         'X-Auth-Token': 'abc-123',
         'X-Auth-Realm': 'ACME Co.'
       }
-      instance = new Base(options)
+      instance = new Base()
       authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
       endpointStub = sinon.stub(Endpoint, 'staffPicklist').returns({method: 'get', url: '/staff-picklist'})
       httpRequestStub = sinon.stub(HttpRequest, 'get').resolves()
@@ -1034,6 +984,48 @@ describe('Base', () => {
 
     it('returns a Promise', () => {
       const actual = instance.staffPicklist()
+      expect(actual).to.be.an.instanceOf(Promise)
+    })
+
+  })
+
+  describe('#laborCodesPicklist()', () => {
+
+    let instance
+    let authHeadersStub
+    let endpointStub
+    let httpRequestStub
+    let authHeaders
+
+    before(() => {
+      authHeaders = {
+        'X-Auth-Token': 'abc-123',
+        'X-Auth-Realm': 'ACME Co.'
+      }
+      instance = new Base()
+      authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
+      endpointStub = sinon.stub(Endpoint, 'laborCodesPicklist').returns({method: 'get', url: '/labor-codes-picklist'})
+      httpRequestStub = sinon.stub(HttpRequest, 'get').resolves()
+    })
+
+    after(() => {
+      endpointStub.restore()
+      httpRequestStub.restore()
+      authHeadersStub.restore()
+    })
+
+    it('uses the corresponding endpoint', () => {
+      instance.laborCodesPicklist()
+      expect(endpointStub).to.have.been.calledWith({})
+    })
+
+    it('makes an HTTP request', () => {
+      instance.laborCodesPicklist()
+      expect(httpRequestStub).to.have.been.calledWith('/labor-codes-picklist', authHeaders)
+    })
+
+    it('returns a Promise', () => {
+      const actual = instance.laborCodesPicklist()
       expect(actual).to.be.an.instanceOf(Promise)
     })
 
