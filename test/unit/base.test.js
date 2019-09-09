@@ -1073,4 +1073,46 @@ describe('Base', () => {
 
   })
 
+  describe('#getProjectList()', () => {
+
+    let instance
+    let authHeadersStub
+    let endpointStub
+    let httpRequestStub
+    let authHeaders
+
+    before(() => {
+      authHeaders = {
+        'X-Auth-Token': 'abc-123',
+        'X-Auth-Realm': 'ACME Co.'
+      }
+      instance = new Base()
+      authHeadersStub = sinon.stub(instance, 'authHeaders').get(() => authHeaders)
+      endpointStub = sinon.stub(Endpoint, 'getProjectList').returns({method: 'get', url: '/project'})
+      httpRequestStub = sinon.stub(HttpRequest, 'get').resolves()
+    })
+
+    after(() => {
+      endpointStub.restore()
+      httpRequestStub.restore()
+      authHeadersStub.restore()
+    })
+
+    it('uses the corresponding endpoint', () => {
+      instance.getProjectList()
+      expect(endpointStub).to.have.been.calledWith({})
+    })
+
+    it('makes an HTTP request', () => {
+      instance.getProjectList()
+      expect(httpRequestStub).to.have.been.calledWith('/project', authHeaders)
+    })
+
+    it('returns a Promise', () => {
+      const actual = instance.getProjectList()
+      expect(actual).to.be.an.instanceOf(Promise)
+    })
+
+  })
+
 })

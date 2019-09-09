@@ -35,7 +35,7 @@ const bigTime = new BigTime();
 `npm test`
 
 ```
-206 passing (182ms)
+213 passing (174ms)
 
 -------------------------|----------|----------|----------|----------|-------------------|
 File                     |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |

@@ -269,6 +269,20 @@ class Endpoint {
     return { method, url }
   }
 
+  /**
+   * [getProjectList description]
+   *
+   * @param  {Object} queryParams
+   * @return {Object}
+   * @see http://iq.bigtime.net/BigTimeData/api/v2/help/Project
+   */
+  static getProjectList(queryParams = {}) {
+    const method = 'get'
+    const endpoint = '/project'
+    const url = `${apiBase}${endpoint}?${qs.stringify(queryParams)}`
+    return { method, url }
+  }
+
 }
 
 module.exports = Endpoint

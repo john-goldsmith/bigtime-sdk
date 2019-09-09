@@ -386,6 +386,17 @@ class Base {
     return HttpRequest[method](url, this.authHeaders)
   }
 
+  /**
+   * [getProjectList description]
+   *
+   * @param  {Object} queryParams
+   * @return {Promise<Array>}
+   */
+  getProjectList(queryParams = {}) {
+    const { method, url } = Endpoint.getProjectList(queryParams)
+    return HttpRequest[method](url, this.authHeaders)
+  }
+
 }
 
 module.exports = Base
