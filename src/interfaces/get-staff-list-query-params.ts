@@ -1,0 +1,3 @@
+interface GetStaffListQueryParams {
+  ShowInactive?: boolean
+}

@@ -1,0 +1,3 @@
+interface IBigTimeSdkError {
+  name: string
+}

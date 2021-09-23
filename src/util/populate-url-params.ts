@@ -1,4 +1,4 @@
-const pathToRegExp = require('path-to-regexp')
+import pathToRegExp from 'path-to-regexp'
 
 /**
  * [populateUrlParams description]
@@ -8,8 +8,8 @@ const pathToRegExp = require('path-to-regexp')
  * @param  {Object} params
  * @return {String}
  */
-function populateUrlParams(url = '', params = {}) {
+function populateUrlParams(url: string = '', params: {} = {}): string {
   return pathToRegExp.compile(url)(params)
 }
 
-module.exports = populateUrlParams
+export default populateUrlParams

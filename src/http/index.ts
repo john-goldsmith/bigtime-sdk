@@ -1,22 +1,21 @@
-const fetch = require('isomorphic-fetch')
-/**
- * The following is available from the `isomorphic-fetch` package,
- * which is just a reference to the class exposed by the `node-fetch`
- * package.
- *
- * @see github.com/matthew-andrews/isomorphic-fetch/blob/master/fetch-npm-node.js
- */
-const Request = global.Request
-// const Headers = global.Headers
-// const baseUrl = 'https://iq.bigtime.net/BigtimeData/api/v2'
-const defaultHeaders = {
+import fetch, { Response, RequestInit } from 'node-fetch'
+
+const defaultHeaders: {[key: string]: string} = {
   'Content-Type': 'application/json'
+}
+
+export enum HttpMethods {
+  GET = 'GET',
+  POST = 'POST',
+  PATCH = 'PATCH',
+  PUT = 'PUT',
+  DELETE = 'DELETE'
 }
 
 /**
  * @class
  */
-class HttpRequest {
+class Http /*implements IHttp*/ {
 
   /**
    * Issue an HTTP GET request.
@@ -27,9 +26,9 @@ class HttpRequest {
    * @param  {Object} headers
    * @return {Promise}
    */
-  static get(url, headers = {}) {
+  public static get(url: string, headers: {} = {}): Promise<Response> {
     if (!url) throw new Error('Base.get: a URL is required.')
-    return request(url, 'GET', null, headers)
+    return request(url, HttpMethods.GET, null, headers)
   }
 
   /**
@@ -42,9 +41,9 @@ class HttpRequest {
    * @param  {Object} headers
    * @return {Promise}
    */
-  static post(url, body = {}, headers = {}) {
+  public static post(url: string, body = {}, headers = {}): Promise<Response> {
     if (!url) throw new Error('Base.post: a URL is required.')
-    return request(url, 'POST', body, headers)
+    return request(url, HttpMethods.POST, body, headers)
   }
 
   /**
@@ -57,9 +56,9 @@ class HttpRequest {
    * @param  {Object} headers
    * @return {Promise}
    */
-  static put(url, body = {}, headers = {}) {
+  public static put(url: string, body = {}, headers = {}): Promise<Response> {
     if (!url) throw new Error('Base.put: a URL is required.')
-    return request(url, 'PUT', body, headers)
+    return request(url, HttpMethods.PUT, body, headers)
   }
 
   /**
@@ -72,9 +71,9 @@ class HttpRequest {
    * @param  {Object} headers
    * @return {Promise}
    */
-  static delete(url, body = {}, headers = {}) {
+  public static delete(url: string, body = {}, headers = {}): Promise<Response> {
     if (!url) throw new Error('Base.delete: a URL is required.')
-    return request(url, 'DELETE', body, headers)
+    return request(url, HttpMethods.DELETE, body, headers)
   }
 
 }
@@ -90,16 +89,19 @@ class HttpRequest {
  * @param  {Object} headers
  * @return {Promise<Response>}
  */
-function request(url, method, body, headers) {
-  const request = new Request(url, {
-    method,
-    body: JSON.stringify(body),
-    headers: Object.assign({}, headers, defaultHeaders)
-    // headers: new Headers({})
-  })
-  return fetch(request)
-    .then(responseBodyAsJson)
-    .then(checkResponseStatus)
+async function request(url: string, method: string, body: {} | null, headers: {}): Promise<Response> {
+  try {
+    const options: RequestInit = {
+      method,
+      body: JSON.stringify(body),
+      headers: Object.assign({}, headers, defaultHeaders)
+    }
+    const response: Response = await fetch(url, options)
+    const result: Response = await checkResponseStatus(response)
+    return result
+  } catch (err) {
+    throw err
+  }
 }
 
 /**
@@ -110,7 +112,7 @@ function request(url, method, body, headers) {
  * @param  {Response} response
  * @return {Promise}
  */
-function checkResponseStatus(response) {
+function checkResponseStatus(response: Response): Promise<Response> {
   return (response.status > 199 && response.status < 400) ? Promise.resolve(response) : Promise.reject(response)
 }
 
@@ -121,15 +123,11 @@ function checkResponseStatus(response) {
  * @method responseBodyAsJson
  * @param  {Response} response
  * @return {Promise<Response>}
- */
-function responseBodyAsJson(response) {
-  return response.json()
-    .then(
-      json => {
-        response.body = json // TODO: Is this bad?
-        return response
-      }
-    )
-}
+ *
+async function responseBodyAsJson(response: Response): Promise<Response> {
+  const json = await response.json()
+  response.body = json // TODO: Is this bad?
+  return response
+}*/
 
-module.exports = HttpRequest
+export default Http

@@ -4,12 +4,14 @@
     "url": "https://github.com/john-goldsmith/bigtime-sdk/issues"
   },
   "dependencies": {
-    "isomorphic-fetch": "2.2.1",
-    "path-to-regexp": "2.2.0",
-    "qs": "6.5.1"
+    "node-fetch": "2.6.0",
+    "path-to-regexp": "3.1.0",
+    "qs": "6.9.0"
   },
   "description": "Node wrapper for interacting with the BigTime API",
   "devDependencies": {
+    "@types/node-fetch": "^2.5.2",
+    "@types/qs": "6.5.3",
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
     "coveralls": "3.0.0",
@@ -22,7 +24,8 @@
     "nock": "9.2.3",
     "nyc": "11.6.0",
     "sinon": "4.4.5",
-    "sinon-chai": "3.0.0"
+    "sinon-chai": "3.0.0",
+    "typescript": "3.6.4"
   },
   "engines": {
     "node": "9.6.x",
@@ -40,7 +43,11 @@
     "lint": "$(npm bin)/eslint index.js ./src/**/*.js ./test/**/*.js",
     "precommit": "npm run lint && npm test",
     "test": "$(npm bin)/nyc mocha --recursive --require ./test/helper.js && $(npm bin)/nyc report --reporter=lcov && echo 'Open ./coverage/lcov-report/index.html in your browser'",
-    "test:coveralls": "cat ./coverage/lcov.info | $(npm bin)/coveralls"
+    "test:coveralls": "cat ./coverage/lcov.info | $(npm bin)/coveralls",
+    "dist": "npm run dist:clean && npm run dist:tsc",
+    "dist:clean": "rm -rf ./dist",
+    "dist:tsc": "$(npm bin)/tsc"
   },
+  "types": "src/types/index.d.ts",
   "version": "0.11.0"
 }
