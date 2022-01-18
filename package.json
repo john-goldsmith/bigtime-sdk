@@ -4,7 +4,7 @@
     "url": "https://github.com/john-goldsmith/bigtime-sdk/issues"
   },
   "dependencies": {
-    "isomorphic-fetch": "2.2.1",
+    "isomorphic-fetch": "3.0.0",
     "path-to-regexp": "2.2.0",
     "qs": "6.5.1"
   },
