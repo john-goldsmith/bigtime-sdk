@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "isomorphic-fetch": "2.2.1",
-    "path-to-regexp": "2.2.0",
+    "path-to-regexp": "8.0.0",
     "qs": "6.5.1"
   },
   "description": "Node wrapper for interacting with the BigTime API",
